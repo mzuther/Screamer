@@ -17,19 +17,21 @@ CFLAGS = -g -Wall -I/usr/lib/faust
 # The dynamic libraries that the executable needs to be linked to
 LDFLAGS = -L/usr/lib/faust
 
+
 # The Dependency Rules
 # They take the form
 # target: dependency1 dependency2...
 #        Command(s) to generate target from dependencies
+jack: faust_screamer
 
-jack: screamer_jack
 
 ladspa: screamer_ladspa.so
 
-screamer_jack: tmp/screamer_jack.cpp
+
+faust_screamer: tmp/screamer_jack.cpp
 	@echo "Compiling application..."
 	@faust2jaqt "modules/screamer.dsp"
-	@mv "modules/screamer" "screamer_jack"
+	@mv "modules/screamer" "faust_screamer"
 	@echo
 
 
@@ -79,7 +81,7 @@ tmp/screamer_ladspa.cpp: modules/*.dsp
 
 
 clean:
-	@rm -f screamer_jack
+	@rm -f faust_screamer
 	@rm -f screamer_ladspa.so
 
 	@rm -f modules/*-svg/*.svg
