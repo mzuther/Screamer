@@ -1,0 +1,44 @@
+# indent using given number of spaces 
+--indent=spaces=4
+
+# indent C++ comments beginning in column one
+--indent-col1-comments
+
+# pad empty lines around header blocks ('if', 'for', 'while'...)
+--break-blocks
+
+
+
+# break brackets from their pre-block statements
+--style=break
+
+# add brackets to one line conditional statements ('if', 'for', 'while'...)
+--add-brackets
+
+
+
+# remove extra space padding around parentheses
+--unpad-paren
+
+# insert space padding after paren headers only ('if', 'for', 'while'...)
+--pad-header
+
+# insert space padding around operators
+--pad-oper
+
+# attach pointer or reference operators (* or &) to the variable name (right)
+--align-pointer=name
+
+
+
+# display optional information
+--verbose
+
+# only display changed files
+--formatted
+
+# force Linux-style line endings (LF)
+--lineend=linux
+
+# append given suffix to the original file name
+--suffix=.astyle~

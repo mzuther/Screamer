@@ -1,6 +1,7 @@
 ignore/
-output/
+tmp/
 screamer-svg/
 
-screamer
+screamer_*
+screamer_*.so
 screamer.m
