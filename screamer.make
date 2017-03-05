@@ -41,35 +41,39 @@ screamer_ladspa.so: tmp/screamer_ladspa.cpp
 
 
 tmp/screamer_jack.cpp: modules/*.dsp
-	@rm -f modules/*-svg/*.svg
-	@rm -fd modules/*-svg/
-
 	@echo
 	@echo "=== Jack standalone ==="
-	@echo "Running Faust..."
+	@echo "Creating SVG flow diagram..."
+	@rm -f modules/*-svg/*.svg
+	@rm -fd modules/*-svg/
+	@faust2svg "modules/screamer.dsp"
+
+	@echo "Creating source file..."
 	@mkdir -p tmp
 	@faust -cn "Screamer" -double "modules/screamer.dsp" \
 		-a "jack-qt.cpp" -o "tmp/screamer_jack.cpp" \
 		|| (rm -f *.cpp && false)
 
-	@echo "Formatting source..."
+	@echo "Formatting source file..."
 	@astyle --quiet --options=./.astylerc "tmp/screamer_jack.cpp"
 	@rm -f tmp/*.cpp.astyle~
 
 
 tmp/screamer_ladspa.cpp: modules/*.dsp
-	@rm -f modules/*-svg/*.svg
-	@rm -fd modules/*-svg/
-
 	@echo
 	@echo "=== LADSPA plug-in ==="
-	@echo "Running Faust..."
+	@echo "Creating SVG flow diagram..."
+	@rm -f modules/*-svg/*.svg
+	@rm -fd modules/*-svg/
+	@faust2svg "modules/screamer.dsp"
+
+	@echo "Creating source file..."
 	@mkdir -p tmp
 	@faust -cn "Screamer" -double "modules/screamer.dsp" \
 		-a "ladspa.cpp" -o "tmp/screamer_ladspa.cpp" \
 		|| (rm -f *.cpp && false)
 
-	@echo "Formatting source..."
+	@echo "Formatting source file..."
 	@astyle --quiet --options=./.astylerc "tmp/screamer_ladspa.cpp"
 	@rm -f tmp/*.cpp.astyle~
 
