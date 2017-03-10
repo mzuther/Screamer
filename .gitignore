@@ -1,7 +1,7 @@
 ignore/
 tmp/
-screamer-svg/
 
+*.svg
 faust_screamer
 screamer_*.so
 screamer.m
