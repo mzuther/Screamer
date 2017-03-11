@@ -24,7 +24,7 @@
 ---------------------------------------------------------------------------- */
 
 declare name       "Screamer";
-declare version    "1.2.0";
+declare version    "1.3.0";
 declare copyright  "(c) 2003-2017 Martin Zuther";
 declare license    "GPL v3 or later";
 
@@ -34,53 +34,62 @@ mz = component("mzuther.dsp");
 
 fractional_downsampler = component("fractional_downsampler.dsp").downsampler;
 modulo_distortion = component("modulo_distortion.dsp").distortion;
+clip_distortion = component("clip_distortion.dsp").distortion;
 mathematical_overdrive = component("mathematical_overdrive.dsp").overdrive;
 
 
 main_group(x) = hgroup("", x);
 
-overdrive_group(x) = main_group(vgroup("[1] Mathematical overdrive", x));
-modulo_group(x) = main_group(vgroup("[2] Modulo distortion", x));
-downsampler_group(x) = main_group(vgroup("[3] Fractional downsampler", x));
+ovrd_group(x) = main_group(vgroup("[1] Mathematical overdrive", x));
+mdst_group(x) = main_group(vgroup("[2] Modulo distortion", x));
+clip_group(x) = main_group(vgroup("[3] Distortion", x));
+dwns_group(x) = main_group(vgroup("[4] Fractional downsampler", x));
 
 
-threshold = overdrive_group(ba.db2linear(
+ovrd_threshold = ovrd_group(ba.db2linear(
     hslider(
         "[01] Threshold (0 disables) [style:slider][unit:dB]" ,
         0.0 , -40.0 , 0.0 , 1.0)));
 
-drive = overdrive_group(hslider(
+ovrd_drive = ovrd_group(hslider(
     "[02] Drive [style:slider][unit:exp]" ,
     10.0 , 1.0 , 100.0 , 1.0));
 
-drive_real = pow(10.0, (drive - 0.01) / -50.0);
+ovrd_drive_real = pow(10.0, (ovrd_drive - 0.01) / -50.0);
 
-output = overdrive_group(ba.db2linear(
+ovrd_output = ovrd_group(ba.db2linear(
     hslider(
         "[03] Output gain [style:slider][unit:dB]" ,
         0.0 , -6.0 , 6.0 , 1.0)));
 
 
-modulo = modulo_group(hslider(
+mdst_modulo = mdst_group(hslider(
     "[01] Modulo (1 disables)" ,
     1 , 1 , 1e4 , 1));
 
 
-divisor = downsampler_group(hslider(
-    "[01] Downsample (0.99 disables) [style:slider][unit:x]" ,
+clip_threshold = clip_group(ba.db2linear(
+    hslider(
+        "[01] Threshold (0 disables) [style:slider][unit:dB]" ,
+        0.0 , -40.0 , 0.0 , 1.0)));
+
+
+dwns_factor = dwns_group(hslider(
+    "[01] Factor (0.99 disables) [style:slider][unit:x]" ,
     0.99 , 0.99 , 32.0 , 0.01));
 
-lfo_frequency = downsampler_group(hslider(
+dwns_lfo_freq = dwns_group(hslider(
     "[02] LFO frequency [style:slider][unit:Hz]" ,
     0.0 , 0.0 , 10.0 , 0.01));
 
-lfo_modulation = downsampler_group(hslider(
+dwns_lfo_mod = dwns_group(hslider(
     "[03] LFO modulation [style:slider][unit:%]" ,
     0.0 , 0.0 , 100.0 , 1.0));
 
 
 process = mz.stereo(
-    mathematical_overdrive(threshold , drive_real) :
-    modulo_distortion(modulo) :
-    fractional_downsampler(divisor , lfo_frequency , lfo_modulation) :
-    _ * output);
+    mathematical_overdrive(ovrd_threshold , ovrd_drive_real) * ovrd_output :
+    modulo_distortion(mdst_modulo) :
+    clip_distortion(clip_threshold) :
+    fractional_downsampler(dwns_factor , dwns_lfo_freq , dwns_lfo_mod)
+);

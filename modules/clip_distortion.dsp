@@ -26,25 +26,18 @@
 import("stdfaust.lib");
 
 
-downsampler(factor , lfo_frequency , lfo_modulation) = process
+distortion(threshold) = process
 with
 {
-    lfo = os.osc(lfo_frequency) * lfo_modulation / 100.0 : _;
-
-    real_factor = factor * (1 + lfo) : _;
-    downsample_selector = _ <: _ , _ >= real_factor , 0 - real_factor , 1 : +(ba.if) : _;
-    counter = downsample_selector ~ _ : _;
-
-    sample_and_hold = _ , _ : (ro.cross(2) , _ : _ , ro.cross(2) : ba.if : _) ~ _ : _;
-    downsampler = counter < 1 , _ : sample_and_hold : _;
-
-    process = ba.bypass1(factor < 1.0 , downsampler);
+    distortion = _ <: ba.if(_ >= threshold , threshold , ba.if(_ <= (0 - threshold) , -threshold , _)) : _;
+    process = ba.bypass1(threshold >= 1.0 , distortion);
 };
 
 
-process = downsampler(factor , lfo_frequency , lfo_modulation)
-with {
-    factor = 1.5;
-    lfo_frequency = 0.2;
-    lfo_modulation = 25.0;
+process = distortion(threshold_real)
+with
+{
+    threshold = -20.0;
+
+    threshold_real = ba.db2linear(threshold);
 };
