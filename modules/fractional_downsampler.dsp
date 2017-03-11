@@ -25,8 +25,6 @@
 
 import("stdfaust.lib");
 
-mz = component("mzuther.dsp");
-
 
 downsampler(divisor , lfo_frequency , lfo_modulation) = process
 with
@@ -34,10 +32,10 @@ with
     lfo = os.osc(lfo_frequency) * lfo_modulation / 100.0 : _;
 
     real_divisor = divisor * (1 + lfo) : _;
-    downsample_selector = _ <: _ , _ >= real_divisor , 0 - real_divisor , 1 : +(mz.if_then_else) : _;
+    downsample_selector = _ <: _ , _ >= real_divisor , 0 - real_divisor , 1 : +(ba.if) : _;
     counter = downsample_selector ~ _ : _;
 
-    sample_and_hold = _ , _ : (ro.cross(2) , _ : _ , ro.cross(2) : mz.if_then_else : _) ~ _ : _;
+    sample_and_hold = _ , _ : (ro.cross(2) , _ : _ , ro.cross(2) : ba.if : _) ~ _ : _;
 
     process = counter < 1 , _ : sample_and_hold : _;
 };
