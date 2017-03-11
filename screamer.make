@@ -30,7 +30,7 @@ ladspa: screamer_ladspa.so
 
 faust_screamer: tmp/screamer_jack.cpp
 	@echo "Compiling application..."
-	@faust2jaqt "modules/screamer.dsp"
+	@faust2jack "modules/screamer.dsp"
 	@mv "modules/screamer" "faust_screamer"
 	@echo
 
