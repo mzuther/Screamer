@@ -34,7 +34,8 @@ with
     overdrive_calculate = _ : pow(overdrive_temp_2 , drive) * overdrive_temp_1 + threshold : _;
     overdrive_calculate_2 = _ <: ba.if(_ < 0.0 , 0 - overdrive_calculate , overdrive_calculate) : _;
 
-    process = _ <: ba.if(abs(_) >= threshold , _ : overdrive_calculate_2 , _) :  *((1.0 - drive) * threshold + drive) : _;
+    overdrive = _ <: ba.if(abs(_) >= threshold , _ : overdrive_calculate_2 , _) :  *((1.0 - drive) * threshold + drive) : _;
+    process = ba.bypass1(threshold >= 1.0 , overdrive);
 };
 
 

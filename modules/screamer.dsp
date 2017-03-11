@@ -24,7 +24,7 @@
 ---------------------------------------------------------------------------- */
 
 declare name       "Screamer";
-declare version    "1.1.0";
+declare version    "1.2.0";
 declare copyright  "(c) 2003-2017 Martin Zuther";
 declare license    "GPL v3 or later";
 
@@ -46,7 +46,7 @@ downsampler_group(x) = main_group(vgroup("[3] Fractional downsampler", x));
 
 threshold = overdrive_group(ba.db2linear(
     hslider(
-        "[01] Threshold [style:slider][unit:dB]" ,
+        "[01] Threshold (0 disables) [style:slider][unit:dB]" ,
         0.0 , -40.0 , 0.0 , 1.0)));
 
 drive = overdrive_group(hslider(
@@ -62,13 +62,13 @@ output = overdrive_group(ba.db2linear(
 
 
 modulo = modulo_group(hslider(
-    "[01] Modulo" ,
+    "[01] Modulo (1 disables)" ,
     1 , 1 , 1e4 , 1));
 
 
 divisor = downsampler_group(hslider(
-    "[01] Downsample [style:slider][unit:x]" ,
-    1.0 , 1.0 , 32.0 , 0.01));
+    "[01] Downsample (0.99 disables) [style:slider][unit:x]" ,
+    0.99 , 0.99 , 32.0 , 0.01));
 
 lfo_frequency = downsampler_group(hslider(
     "[02] LFO frequency [style:slider][unit:Hz]" ,

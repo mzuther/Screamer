@@ -36,8 +36,9 @@ with
     counter = downsample_selector ~ _ : _;
 
     sample_and_hold = _ , _ : (ro.cross(2) , _ : _ , ro.cross(2) : ba.if : _) ~ _ : _;
+    downsampler = counter < 1 , _ : sample_and_hold : _;
 
-    process = counter < 1 , _ : sample_and_hold : _;
+    process = ba.bypass1(divisor < 1.0 , downsampler);
 };
 
 
