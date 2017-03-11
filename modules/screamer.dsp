@@ -58,7 +58,7 @@ drive_real = pow(10.0, (drive - 0.01) / -50.0);
 output = overdrive_group(ba.db2linear(
     hslider(
         "[03] Output gain [style:slider][unit:dB]" ,
-        0.0 , -24.0 , 0.0 , 1.0)));
+        0.0 , -6.0 , 6.0 , 1.0)));
 
 
 modulo = modulo_group(hslider(

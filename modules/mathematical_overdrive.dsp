@@ -34,13 +34,16 @@ with
     overdrive_calculate = _ : pow(overdrive_temp_2 , drive) * overdrive_temp_1 + threshold : _;
     overdrive_calculate_2 = _ <: ba.if(_ < 0.0 , 0 - overdrive_calculate , overdrive_calculate) : _;
 
-    process = _ <: ba.if(abs(_) >= threshold , _ : overdrive_calculate_2 , _) : _;
+    process = _ <: ba.if(abs(_) >= threshold , _ : overdrive_calculate_2 , _) :  *((1.0 - drive) * threshold + drive) : _;
 };
 
 
-process = overdrive(threshold , drive)
+process = overdrive(threshold_real , drive_real)
 with
 {
     threshold = -20.0;
-    drive = 0.7;
+    drive = 10;
+
+    threshold_real = ba.db2linear(threshold);
+    drive_real = pow(10.0, (drive - 0.01) / -50.0);
 };
