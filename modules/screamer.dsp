@@ -24,7 +24,7 @@
 ---------------------------------------------------------------------------- */
 
 declare name       "Screamer";
-declare version    "1.3.4";
+declare version    "1.3.5";
 declare copyright  "(c) 2003-2017 Martin Zuther";
 declare license    "GPL v3 or later";
 
@@ -55,9 +55,7 @@ ovrd_drive = ovrd_group(hslider(
     "[02] Drive [style:slider][unit:exp]" ,
     10.0 , 1.0 , 100.0 , 1.0));
 
-ovrd_drive_real = pow(10.0, (ovrd_drive - 0.01) / -50.0);
-
-ovrd_output = ba.db2linear(
+ovrd_gain = ba.db2linear(
     ovrd_group(hslider(
         "[03] Output gain [style:slider][unit:dB]" ,
         0.0 , -6.0 , 6.0 , 1.0)));
@@ -77,8 +75,6 @@ clip_drive = clip_group(hslider(
     "[02] Drive [style:slider][unit:exp]" ,
     10.0 , 0.0 , 100.0 , 1.0));
 
-clip_drive_real = clip_drive / 100.0;
-
 
 dwns_factor = dwns_group(hslider(
     "[01] Factor (0.99 disables) [style:slider][unit:x]" ,
@@ -93,8 +89,11 @@ dwns_lfo_mod = dwns_group(hslider(
     0.0 , 0.0 , 100.0 , 1.0));
 
 
+ovrd_drive_real = pow(10.0, (ovrd_drive - 0.01) / -50.0);
+clip_drive_real = clip_drive / 100.0;
+
 process = mz.stereo(
-    mathematical_overdrive(ovrd_threshold , ovrd_drive_real) * ovrd_output :
+    mathematical_overdrive(ovrd_threshold , ovrd_drive_real , ovrd_gain) :
     modulo_distortion(mdst_modulo) :
     clip_distortion(clip_threshold, clip_drive_real) :
     fractional_downsampler(dwns_factor , dwns_lfo_freq , dwns_lfo_mod)
