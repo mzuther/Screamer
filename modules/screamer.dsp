@@ -24,7 +24,7 @@
 ---------------------------------------------------------------------------- */
 
 declare name       "Screamer";
-declare version    "1.3.0";
+declare version    "1.3.1";
 declare copyright  "(c) 2003-2017 Martin Zuther";
 declare license    "GPL v3 or later";
 
@@ -42,7 +42,7 @@ main_group(x) = hgroup("", x);
 
 ovrd_group(x) = main_group(vgroup("[1] Mathematical overdrive", x));
 mdst_group(x) = main_group(vgroup("[2] Modulo distortion", x));
-clip_group(x) = main_group(vgroup("[3] Distortion", x));
+clip_group(x) = main_group(vgroup("[3] Clip distortion", x));
 dwns_group(x) = main_group(vgroup("[4] Fractional downsampler", x));
 
 
@@ -77,6 +77,8 @@ clip_drive = clip_group(hslider(
     "[02] Drive [style:slider][unit:exp]" ,
     10.0 , 0.0 , 100.0 , 1.0));
 
+clip_drive_real = clip_drive / 100.0;
+
 
 dwns_factor = dwns_group(hslider(
     "[01] Factor (0.99 disables) [style:slider][unit:x]" ,
@@ -94,6 +96,6 @@ dwns_lfo_mod = dwns_group(hslider(
 process = mz.stereo(
     mathematical_overdrive(ovrd_threshold , ovrd_drive_real) * ovrd_output :
     modulo_distortion(mdst_modulo) :
-    clip_distortion(clip_threshold, clip_drive) :
+    clip_distortion(clip_threshold, clip_drive_real) :
     fractional_downsampler(dwns_factor , dwns_lfo_freq , dwns_lfo_mod)
 );

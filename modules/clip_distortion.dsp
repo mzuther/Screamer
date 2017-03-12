@@ -30,8 +30,9 @@ mz = component("mzuther.dsp");
 distortion(threshold , drive) = process
 with
 {
-    distortion_processor = _ <: mz.if_then_else(abs(_) >= threshold , threshold , _) : _;
-    distortion = _ <: mz.if_then_else(_ < 0.0 , -1.0 , 1.0 ) * distortion_processor : _;
+    distortor = _ : _ - threshold : _ * (1.0 - drive) : _ + threshold : _;
+    trigger = _ <: mz.if_then_else(abs(_) >= threshold , distortor , _) : _;
+    distortion = _ <: mz.if_then_else(_ < 0.0 , -1.0 , 1.0 ) * trigger : _;
 
     process = ba.bypass1(threshold >= 1.0 , distortion);
 };
