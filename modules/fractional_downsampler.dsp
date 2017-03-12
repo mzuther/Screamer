@@ -47,7 +47,15 @@ with
 process = downsampler(factor , lfo_frequency , lfo_modulation)
 with
 {
-    factor = 1.5;
-    lfo_frequency = 0.2;
-    lfo_modulation = 25.0;
+    factor = hslider(
+        "[1] Factor (0.99 disables) [style:slider][unit:x]" ,
+        0.99 , 0.99 , 32.0 , 0.01);
+
+    lfo_frequency = hslider(
+        "[2] LFO frequency [style:slider][unit:Hz]" ,
+        0.0 , 0.0 , 10.0 , 0.01);
+
+    lfo_modulation = hslider(
+        "[3] LFO modulation [style:slider][unit:%]" ,
+        0.0 , 0.0 , 100.0 , 1.0);
 };

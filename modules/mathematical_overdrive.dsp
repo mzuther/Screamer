@@ -52,7 +52,15 @@ with
 process = overdrive(threshold , drive , gain)
 with
 {
-    threshold = -20.0;
-    drive = 10.0;
-    gain = 0.0;
+    threshold = hslider(
+        "[1] Threshold (0 disables) [style:slider][unit:dB]" ,
+        0.0 , -40.0 , 0.0 , 1.0);
+
+    drive = hslider(
+        "[2] Drive [style:slider][unit:exp]" ,
+        10.0 , 1.0 , 100.0 , 1.0);
+
+    gain = hslider(
+        "[3] Output gain [style:slider][unit:dB]" ,
+        0.0 , -6.0 , 6.0 , 1.0);
 };

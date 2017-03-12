@@ -51,7 +51,14 @@ with
 process = distortion(threshold , drive , crucify)
 with
 {
-    threshold = -20.0;
-    drive = 50.0;
-    crucify = 0;
+    threshold = hslider(
+        "[1] Threshold (0 disables) [style:slider][unit:dB]" ,
+        0.0 , -40.0 , 0.0 , 1.0);
+
+    drive = hslider(
+        "[2] Drive [style:slider][unit:exp]" ,
+        10.0 , 0.0 , 100.0 , 1.0);
+
+    crucify = checkbox(
+        "[3] Crucify");
 };

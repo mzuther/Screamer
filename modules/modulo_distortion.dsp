@@ -39,5 +39,7 @@ with
 process = distortion(modulo)
 with
 {
-    modulo = 1000;
+    modulo = hslider(
+        "[1] Modulo (1 disables)" ,
+        1 , 1 , 1e4 , 1);
 };
