@@ -30,13 +30,15 @@ mz = component("mzuther.dsp");
 overdrive(threshold , drive) = process
 with
 {
-    overdrive_temp_1 = 1.01 - threshold : _;
-    overdrive_temp_2 = _ : (abs(_) - threshold) / overdrive_temp_1 : _;
-    overdrive_calculate = _ : pow(overdrive_temp_2 , drive) * overdrive_temp_1 + threshold : _;
-    overdrive_calculate_2 = _ <: mz.if_then_else(_ < 0.0 , -1.0 , 1.0) * overdrive_calculate : _;
+    makeup_gain = (1.0 - drive) * threshold + drive : _;
 
-    overdrive = _ <: mz.if_then_else(abs(_) >= threshold , _ : overdrive_calculate_2 , _) :  *((1.0 - drive) * threshold + drive) : _;
+    temp_1 = 1.01 - threshold : _;
+    temp_2 = _ : (abs(_) - threshold) / temp_1 : _;
 
+    overdriver = _ : pow(temp_2 , drive) * temp_1 + threshold : _;
+    trigger = _ <: mz.if(abs(_) >= threshold , overdriver , _) : _;
+
+    overdrive = _ <: mz.if(_ < 0.0 , -1.0 , 1.0) * trigger * makeup_gain : _;
     process = ba.bypass1(threshold >= 1.0 , overdrive);
 };
 

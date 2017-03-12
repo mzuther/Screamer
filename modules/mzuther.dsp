@@ -43,18 +43,18 @@ impulse_train = 1.0 - 1.0';
 // can occur during execution.
 //
 //
-//                +--------------+
-// condition ---> |              |
-//                |              |
-//  stream_0 ---> | if_then_else | ---> output
-//                |              |
-//  stream_1 ---> |              |
-//                +--------------+
+//                +---------+
+// condition ---> |         |
+//                |         |
+//  stream_0 ---> |   if    | ---> output
+//                |         |
+//  stream_1 ---> |         |
+//                +---------+
 //
 // If "condition" is exactly 0.0, the output is "stream_1".  In any
 // other case, the output is "stream_0".  This function prevents you
 // from errors during execution.
-if_then_else = _ , _ , _ : (_ != 0.0) , ro.cross(2) : select2;
+if = _ , _ , _ : (_ != 0.0) , ro.cross(2) : select2 : _;
 
 
 // create a stereo effect
