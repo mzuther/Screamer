@@ -27,7 +27,7 @@ import("stdfaust.lib");
 mz = component("mzuther.dsp");
 
 
-distortion(threshold_pre , drive_pre) = process
+distortion(threshold_pre , drive_pre , crucify) = process
 with
 {
     // pre-process parameters
@@ -35,16 +35,19 @@ with
     drive = drive_pre / 100.0;
 
     clipper = _ - threshold : _ * (1.0 - drive) : _ + threshold;
-    trigger = _ <: mz.if(abs(_) >= threshold , clipper , _) : _;
+    trigger_crucified = _ <: mz.if(abs >= threshold , clipper , _) : _;
+    trigger_clean = _ : abs <: mz.if(_ >= threshold , clipper , _) : _;
+    trigger = _ <: mz.if(crucify , trigger_crucified , trigger_clean) : _;
 
     distortion = _ <: mz.get_sign * trigger : _;
     process = ba.bypass1(threshold >= 1.0 , distortion);
 };
 
 
-process = distortion(threshold , drive)
+process = distortion(threshold , drive , crucify)
 with
 {
     threshold = -20.0;
     drive = 50.0;
+    crucify = 0;
 };

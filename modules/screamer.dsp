@@ -24,7 +24,7 @@
 ---------------------------------------------------------------------------- */
 
 declare name       "Screamer";
-declare version    "1.3.6";
+declare version    "1.3.7";
 declare copyright  "(c) 2003-2017 Martin Zuther";
 declare license    "GPL v3 or later";
 
@@ -47,48 +47,51 @@ dwns_group(x) = main_group(vgroup("[4] Fractional downsampler", x));
 
 
 ovrd_threshold = ovrd_group(hslider(
-    "[01] Threshold (0 disables) [style:slider][unit:dB]" ,
+    "[1] Threshold (0 disables) [style:slider][unit:dB]" ,
     0.0 , -40.0 , 0.0 , 1.0));
 
 ovrd_drive = ovrd_group(hslider(
-    "[02] Drive [style:slider][unit:exp]" ,
+    "[2] Drive [style:slider][unit:exp]" ,
     10.0 , 1.0 , 100.0 , 1.0));
 
 ovrd_gain = ovrd_group(hslider(
-    "[03] Output gain [style:slider][unit:dB]" ,
+    "[3] Output gain [style:slider][unit:dB]" ,
     0.0 , -6.0 , 6.0 , 1.0));
 
 
 mdst_modulo = mdst_group(hslider(
-    "[01] Modulo (1 disables)" ,
+    "[1] Modulo (1 disables)" ,
     1 , 1 , 1e4 , 1));
 
 
 clip_threshold = clip_group(hslider(
-    "[01] Threshold (0 disables) [style:slider][unit:dB]" ,
+    "[1] Threshold (0 disables) [style:slider][unit:dB]" ,
     0.0 , -40.0 , 0.0 , 1.0));
 
 clip_drive = clip_group(hslider(
-    "[02] Drive [style:slider][unit:exp]" ,
+    "[2] Drive [style:slider][unit:exp]" ,
     10.0 , 0.0 , 100.0 , 1.0));
+
+clip_crucify = clip_group(checkbox(
+    "[3] Crucify"));
 
 
 dwns_factor = dwns_group(hslider(
-    "[01] Factor (0.99 disables) [style:slider][unit:x]" ,
+    "[1] Factor (0.99 disables) [style:slider][unit:x]" ,
     0.99 , 0.99 , 32.0 , 0.01));
 
 dwns_lfo_freq = dwns_group(hslider(
-    "[02] LFO frequency [style:slider][unit:Hz]" ,
+    "[2] LFO frequency [style:slider][unit:Hz]" ,
     0.0 , 0.0 , 10.0 , 0.01));
 
 dwns_lfo_mod = dwns_group(hslider(
-    "[03] LFO modulation [style:slider][unit:%]" ,
+    "[3] LFO modulation [style:slider][unit:%]" ,
     0.0 , 0.0 , 100.0 , 1.0));
 
 
 process = mz.stereo(
     mathematical_overdrive(ovrd_threshold , ovrd_drive , ovrd_gain) :
     modulo_distortion(mdst_modulo) :
-    clip_distortion(clip_threshold, clip_drive) :
+    clip_distortion(clip_threshold, clip_drive , clip_crucify) :
     fractional_downsampler(dwns_factor , dwns_lfo_freq , dwns_lfo_mod)
 );

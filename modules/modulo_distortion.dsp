@@ -31,7 +31,7 @@ with
 {
     modulotar(modulo) = _ <: _ - (_ % int(max(modulo , 1))) : _;
 
-    distortion = _ : int(_ * 1e5) : modulotar(modulo) : float(_) / 1e5 : _;
+    distortion = _ : _ * 1e5 : int : modulotar(modulo) : float / 1e5 : _;
     process = ba.bypass1(modulo <= 1 , distortion);
 };
 
