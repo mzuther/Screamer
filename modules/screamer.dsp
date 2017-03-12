@@ -24,7 +24,7 @@
 ---------------------------------------------------------------------------- */
 
 declare name       "Screamer";
-declare version    "1.3.7";
+declare version    "1.3.8";
 declare copyright  "(c) 2003-2017 Martin Zuther";
 declare license    "GPL v3 or later";
 
@@ -32,17 +32,17 @@ declare license    "GPL v3 or later";
 import("stdfaust.lib");
 mz = component("mzuther.dsp");
 
-fractional_downsampler = component("fractional_downsampler.dsp").downsampler;
-modulo_distortion = component("modulo_distortion.dsp").distortion;
-clip_distortion = component("clip_distortion.dsp").distortion;
 mathematical_overdrive = component("mathematical_overdrive.dsp").overdrive;
+clip_distortion = component("clip_distortion.dsp").distortion;
+modulo_distortion = component("modulo_distortion.dsp").distortion;
+fractional_downsampler = component("fractional_downsampler.dsp").downsampler;
 
 
 main_group(x) = hgroup("", x);
 
 ovrd_group(x) = main_group(vgroup("[1] Mathematical overdrive", x));
-mdst_group(x) = main_group(vgroup("[2] Modulo distortion", x));
-clip_group(x) = main_group(vgroup("[3] Clip distortion", x));
+clip_group(x) = main_group(vgroup("[2] Clip distortion", x));
+mdst_group(x) = main_group(vgroup("[3] Modulo distortion", x));
 dwns_group(x) = main_group(vgroup("[4] Fractional downsampler", x));
 
 
@@ -59,11 +59,6 @@ ovrd_gain = ovrd_group(hslider(
     0.0 , -6.0 , 6.0 , 1.0));
 
 
-mdst_modulo = mdst_group(hslider(
-    "[1] Modulo (1 disables)" ,
-    1 , 1 , 1e4 , 1));
-
-
 clip_threshold = clip_group(hslider(
     "[1] Threshold (0 disables) [style:slider][unit:dB]" ,
     0.0 , -40.0 , 0.0 , 1.0));
@@ -74,6 +69,11 @@ clip_drive = clip_group(hslider(
 
 clip_crucify = clip_group(checkbox(
     "[3] Crucify"));
+
+
+mdst_modulo = mdst_group(hslider(
+    "[1] Modulo (1 disables)" ,
+    1 , 1 , 1e4 , 1));
 
 
 dwns_factor = dwns_group(hslider(
@@ -91,7 +91,7 @@ dwns_lfo_mod = dwns_group(hslider(
 
 process = mz.stereo(
     mathematical_overdrive(ovrd_threshold , ovrd_drive , ovrd_gain) :
-    modulo_distortion(mdst_modulo) :
     clip_distortion(clip_threshold, clip_drive , clip_crucify) :
+    modulo_distortion(mdst_modulo) :
     fractional_downsampler(dwns_factor , dwns_lfo_freq , dwns_lfo_mod)
 );

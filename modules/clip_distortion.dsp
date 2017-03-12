@@ -34,12 +34,16 @@ with
     threshold = ba.db2linear(threshold_pre);
     drive = drive_pre / 100.0;
 
+    makeup_gain = 1.0 / ba.db2linear(threshold_pre / 6.0) : _;
+
     clipper = _ - threshold : _ * (1.0 - drive) : _ + threshold;
-    trigger_crucified = _ <: mz.if(abs >= threshold , clipper , _) : _;
-    trigger_clean = _ : abs <: mz.if(_ >= threshold , clipper , _) : _;
+    clipped_clipper = _ : clipper <: mz.if(abs > 1.0 , mz.get_sign , _) : _;
+
+    trigger_crucified = _ <: mz.if(abs >= threshold , clipped_clipper , _) : _;
+    trigger_clean = _ : abs <: mz.if(_ >= threshold , clipped_clipper , _) : _;
     trigger = _ <: mz.if(crucify , trigger_crucified , trigger_clean) : _;
 
-    distortion = _ <: mz.get_sign * trigger : _;
+    distortion = _ <: mz.get_sign * trigger * makeup_gain : _;
     process = ba.bypass1(threshold >= 1.0 , distortion);
 };
 
