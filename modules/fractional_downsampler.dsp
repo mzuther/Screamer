@@ -31,14 +31,15 @@ downsampler(factor , lfo_frequency , lfo_modulation) = process
 with
 {
     lfo = os.osc(lfo_frequency) * lfo_modulation / 100.0 : _;
+    real_factor = factor * (1.0 + lfo) : _;
 
-    real_factor = factor * (1 + lfo) : _;
-    downsample_selector = _ <: _ , _ >= real_factor , 0 - real_factor , 1 : +(mz.if) : _;
-    counter = downsample_selector ~ _ : _;
+    adder = _ <: _ + mz.if(_ >= real_factor , 0.0 - real_factor , 1.0) : _;
+    counter = adder ~ _ : _;
 
-    sample_and_hold = _ , _ : (ro.cross(2) , _ : _ , ro.cross(2) : mz.if : _) ~ _ : _;
-    downsampler = counter < 1 , _ : sample_and_hold : _;
+    cross_312 = _ , _ , _ : ro.cross(2) , _ : _ , ro.cross(2) : _ , _ , _;
+    sample_and_hold = _ , _ : (cross_312 : mz.if : _) ~ _ : _;
 
+    downsampler = counter < 1.0 , _ : sample_and_hold : _;
     process = ba.bypass1(factor < 1.0 , downsampler);
 };
 

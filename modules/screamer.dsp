@@ -24,7 +24,7 @@
 ---------------------------------------------------------------------------- */
 
 declare name       "Screamer";
-declare version    "1.3.2";
+declare version    "1.3.3";
 declare copyright  "(c) 2003-2017 Martin Zuther";
 declare license    "GPL v3 or later";
 
@@ -46,8 +46,8 @@ clip_group(x) = main_group(vgroup("[3] Clip distortion", x));
 dwns_group(x) = main_group(vgroup("[4] Fractional downsampler", x));
 
 
-ovrd_threshold = ovrd_group(ba.db2linear(
-    hslider(
+ovrd_threshold = ba.db2linear(
+    ovrd_group(hslider(
         "[01] Threshold (0 disables) [style:slider][unit:dB]" ,
         0.0 , -40.0 , 0.0 , 1.0)));
 
@@ -57,8 +57,8 @@ ovrd_drive = ovrd_group(hslider(
 
 ovrd_drive_real = pow(10.0, (ovrd_drive - 0.01) / -50.0);
 
-ovrd_output = ovrd_group(ba.db2linear(
-    hslider(
+ovrd_output = ba.db2linear(
+    ovrd_group(hslider(
         "[03] Output gain [style:slider][unit:dB]" ,
         0.0 , -6.0 , 6.0 , 1.0)));
 
@@ -68,8 +68,8 @@ mdst_modulo = mdst_group(hslider(
     1 , 1 , 1e4 , 1));
 
 
-clip_threshold = clip_group(ba.db2linear(
-    hslider(
+clip_threshold = ba.db2linear(
+    clip_group(hslider(
         "[01] Threshold (0 disables) [style:slider][unit:dB]" ,
         0.0 , -40.0 , 0.0 , 1.0)));
 

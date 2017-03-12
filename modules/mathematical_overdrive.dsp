@@ -38,7 +38,7 @@ with
     overdriver = _ : pow(temp_2 , drive) * temp_1 + threshold : _;
     trigger = _ <: mz.if(abs(_) >= threshold , overdriver , _) : _;
 
-    overdrive = _ <: mz.if(_ < 0.0 , -1.0 , 1.0) * trigger * makeup_gain : _;
+    overdrive = _ <: mz.get_sign * trigger * makeup_gain : _;
     process = ba.bypass1(threshold >= 1.0 , overdrive);
 };
 
@@ -47,7 +47,7 @@ process = overdrive(threshold_real , drive_real)
 with
 {
     threshold = -20.0;
-    drive = 10;
+    drive = 10.0;
 
     threshold_real = ba.db2linear(threshold);
     drive_real = pow(10.0, (drive - 0.01) / -50.0);

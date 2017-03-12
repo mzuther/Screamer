@@ -33,7 +33,7 @@ with
     clipper = _ - threshold : _ * (1.0 - drive) : _ + threshold;
     trigger = _ <: mz.if(abs(_) >= threshold , clipper , _) : _;
 
-    distortion = _ <: mz.if(_ < 0.0 , -1.0 , 1.0 ) * trigger : _;
+    distortion = _ <: mz.get_sign * trigger : _;
     process = ba.bypass1(threshold >= 1.0 , distortion);
 };
 
@@ -42,8 +42,8 @@ process = distortion(threshold_real , drive_real)
 with
 {
     threshold = -20.0;
-    drive = 50;
+    drive = 50.0;
 
     threshold_real = ba.db2linear(threshold);
-    drive_real = drive / 100;
+    drive_real = drive / 100.0;
 };
