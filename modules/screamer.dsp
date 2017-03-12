@@ -73,6 +73,10 @@ clip_threshold = clip_group(ba.db2linear(
         "[01] Threshold (0 disables) [style:slider][unit:dB]" ,
         0.0 , -40.0 , 0.0 , 1.0)));
 
+clip_drive = clip_group(hslider(
+    "[02] Drive [style:slider][unit:exp]" ,
+    10.0 , 0.0 , 100.0 , 1.0));
+
 
 dwns_factor = dwns_group(hslider(
     "[01] Factor (0.99 disables) [style:slider][unit:x]" ,
@@ -90,6 +94,6 @@ dwns_lfo_mod = dwns_group(hslider(
 process = mz.stereo(
     mathematical_overdrive(ovrd_threshold , ovrd_drive_real) * ovrd_output :
     modulo_distortion(mdst_modulo) :
-    clip_distortion(clip_threshold) :
+    clip_distortion(clip_threshold, clip_drive) :
     fractional_downsampler(dwns_factor , dwns_lfo_freq , dwns_lfo_mod)
 );

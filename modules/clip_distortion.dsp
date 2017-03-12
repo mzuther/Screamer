@@ -24,20 +24,25 @@
 ---------------------------------------------------------------------------- */
 
 import("stdfaust.lib");
+mz = component("mzuther.dsp");
 
 
-distortion(threshold) = process
+distortion(threshold , drive) = process
 with
 {
-    distortion = _ <: ba.if(_ >= threshold , threshold , ba.if(_ <= (0 - threshold) , -threshold , _)) : _;
+    distortion_processor = _ <: mz.if_then_else(abs(_) >= threshold , threshold , _) : _;
+    distortion = _ <: mz.if_then_else(_ < 0.0 , -1.0 , 1.0 ) * distortion_processor : _;
+
     process = ba.bypass1(threshold >= 1.0 , distortion);
 };
 
 
-process = distortion(threshold_real)
+process = distortion(threshold_real , drive_real)
 with
 {
     threshold = -20.0;
+    drive = 50;
 
     threshold_real = ba.db2linear(threshold);
+    drive_real = drive / 100;
 };

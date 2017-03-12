@@ -24,6 +24,7 @@
 ---------------------------------------------------------------------------- */
 
 import("stdfaust.lib");
+mz = component("mzuther.dsp");
 
 
 downsampler(factor , lfo_frequency , lfo_modulation) = process
@@ -32,10 +33,10 @@ with
     lfo = os.osc(lfo_frequency) * lfo_modulation / 100.0 : _;
 
     real_factor = factor * (1 + lfo) : _;
-    downsample_selector = _ <: _ , _ >= real_factor , 0 - real_factor , 1 : +(ba.if) : _;
+    downsample_selector = _ <: _ , _ >= real_factor , 0 - real_factor , 1 : +(mz.if_then_else) : _;
     counter = downsample_selector ~ _ : _;
 
-    sample_and_hold = _ , _ : (ro.cross(2) , _ : _ , ro.cross(2) : ba.if : _) ~ _ : _;
+    sample_and_hold = _ , _ : (ro.cross(2) , _ : _ , ro.cross(2) : mz.if_then_else : _) ~ _ : _;
     downsampler = counter < 1 , _ : sample_and_hold : _;
 
     process = ba.bypass1(factor < 1.0 , downsampler);

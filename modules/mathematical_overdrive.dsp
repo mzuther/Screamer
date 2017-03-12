@@ -24,6 +24,7 @@
 ---------------------------------------------------------------------------- */
 
 import("stdfaust.lib");
+mz = component("mzuther.dsp");
 
 
 overdrive(threshold , drive) = process
@@ -32,9 +33,10 @@ with
     overdrive_temp_1 = 1.01 - threshold : _;
     overdrive_temp_2 = _ : (abs(_) - threshold) / overdrive_temp_1 : _;
     overdrive_calculate = _ : pow(overdrive_temp_2 , drive) * overdrive_temp_1 + threshold : _;
-    overdrive_calculate_2 = _ <: ba.if(_ < 0.0 , 0 - overdrive_calculate , overdrive_calculate) : _;
+    overdrive_calculate_2 = _ <: mz.if_then_else(_ < 0.0 , -1.0 , 1.0) * overdrive_calculate : _;
 
-    overdrive = _ <: ba.if(abs(_) >= threshold , _ : overdrive_calculate_2 , _) :  *((1.0 - drive) * threshold + drive) : _;
+    overdrive = _ <: mz.if_then_else(abs(_) >= threshold , _ : overdrive_calculate_2 , _) :  *((1.0 - drive) * threshold + drive) : _;
+
     process = ba.bypass1(threshold >= 1.0 , overdrive);
 };
 

@@ -84,8 +84,8 @@ clean:
 	@rm -f faust_screamer
 	@rm -f screamer_ladspa.so
 
-	@rm -f modules/*-svg/*.svg
-	@rm -fd modules/*-svg/
+	@rm -f modules/screamer-svg/*.svg
+	@rm -fd modules/screamer-svg/
 
 	@rm -f tmp/*.cpp
 	@rm -f tmp/*.cpp.astyle~
