@@ -33,10 +33,10 @@ with
     makeup_gain = (1.0 - drive) * threshold + drive : _;
 
     temp_1 = 1.01 - threshold : _;
-    temp_2 = _ : (abs(_) - threshold) / temp_1 : _;
+    temp_2 = _ : (_ - threshold) / temp_1 : _;
 
     overdriver = _ : pow(temp_2 , drive) * temp_1 + threshold : _;
-    trigger = _ <: mz.if(abs(_) >= threshold , overdriver , _) : _;
+    trigger = _ : abs <: mz.if(_ >= threshold , overdriver , _) : _;
 
     overdrive = _ <: mz.get_sign * trigger * makeup_gain : _;
     process = ba.bypass1(threshold >= 1.0 , overdrive);
