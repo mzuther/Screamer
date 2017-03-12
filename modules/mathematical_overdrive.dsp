@@ -27,9 +27,14 @@ import("stdfaust.lib");
 mz = component("mzuther.dsp");
 
 
-overdrive(threshold , drive , gain) = process
+overdrive(threshold_pre , drive_pre , gain_pre) = process
 with
 {
+    // pre-process parameters
+    threshold = ba.db2linear(threshold_pre);
+    drive = pow(10.0, (drive_pre - 0.01) / -50.0);
+    gain = ba.db2linear(gain_pre);
+
     makeup_gain = (1.0 - drive) * threshold + drive : _;
     output_gain = makeup_gain * gain : _;
 
@@ -44,14 +49,10 @@ with
 };
 
 
-process = overdrive(threshold_real , drive_real , gain_real)
+process = overdrive(threshold , drive , gain)
 with
 {
     threshold = -20.0;
     drive = 10.0;
     gain = 0.0;
-
-    threshold_real = ba.db2linear(threshold);
-    drive_real = pow(10.0, (drive - 0.01) / -50.0);
-    gain_real = ba.db2linear(gain);
 };

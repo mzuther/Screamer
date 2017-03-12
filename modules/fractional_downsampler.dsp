@@ -45,7 +45,8 @@ with
 
 
 process = downsampler(factor , lfo_frequency , lfo_modulation)
-with {
+with
+{
     factor = 1.5;
     lfo_frequency = 0.2;
     lfo_modulation = 25.0;

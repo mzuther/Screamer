@@ -27,9 +27,13 @@ import("stdfaust.lib");
 mz = component("mzuther.dsp");
 
 
-distortion(threshold , drive) = process
+distortion(threshold_pre , drive_pre) = process
 with
 {
+    // pre-process parameters
+    threshold = ba.db2linear(threshold_pre);
+    drive = drive_pre / 100.0;
+
     clipper = _ - threshold : _ * (1.0 - drive) : _ + threshold;
     trigger = _ <: mz.if(abs(_) >= threshold , clipper , _) : _;
 
@@ -38,12 +42,9 @@ with
 };
 
 
-process = distortion(threshold_real , drive_real)
+process = distortion(threshold , drive)
 with
 {
     threshold = -20.0;
     drive = 50.0;
-
-    threshold_real = ba.db2linear(threshold);
-    drive_real = drive / 100.0;
 };
