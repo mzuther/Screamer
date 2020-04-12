@@ -4,7 +4,7 @@
    ========
    Mathematical distortion and signal mangling
 
-   Copyright (c) 2003-2017 Martin Zuther (http://www.mzuther.de/)
+   Copyright (c) 2003-2020 Martin Zuther (http://www.mzuther.de/)
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 
 declare name       "Screamer";
 declare version    "1.4.0";
-declare copyright  "(c) 2003-2017 Martin Zuther";
+declare copyright  "(c) 2003-2020 Martin Zuther";
 declare license    "GPL v3 or later";
 
 

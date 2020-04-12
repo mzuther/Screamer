@@ -6,7 +6,7 @@
 plug-in I wrote in 2003.  In later versions, I have modified the
 parameter ranges and added some new functionality.
 
-This signal mangler features a weird king of overdrive (see source
+This signal mangler features a weird kind of overdrive (see source
 code for exact formula), a hard-clip distortion, LFO-modulated bit
 reduction and the possibility of calculating the modulo of a signal.
 I have never heard anything like it, which is why I finally release it
@@ -23,7 +23,7 @@ bug reports or contributing to this project.  Thanks!
 
 ## License
 
-Copyright (c) 2003-2017 [Martin Zuther][]
+Copyright (c) 2003-2020 [Martin Zuther][]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
